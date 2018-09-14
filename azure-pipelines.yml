@@ -1,0 +1,77 @@
+# Maven
+# Build your Java projects and run tests with Apache Maven.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/vsts/pipelines/languages/java
+jobs:
+- job: Linux
+  pool:
+      vmImage: 'Ubuntu 16.04'
+
+  steps:
+  - script: 'wget https://archive.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.zip'
+
+  - task: ExtractFiles@1
+    inputs:
+        archiveFilePatterns: 'apache-maven-3.5.3-bin.zip'
+        destinationFolder: '$(build.sourcesdirectory)/maven'
+
+  - task: Maven@3
+    inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        jdkArchitectureOption: 'x64'
+        goals: 'clean install'
+        mavenVersionOption: 'Path'
+        mavenDirectory: '$(build.sourcesdirectory)/maven/apache-maven-3.5.3'
+        mavenSetM2Home: true
+
+- job: macOS
+  pool:
+      vmImage: 'macOS 10.13'
+
+  steps:
+  - script: 'wget https://archive.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.zip'
+
+  - task: ExtractFiles@1
+    inputs:
+        archiveFilePatterns: 'apache-maven-3.5.3-bin.zip'
+        destinationFolder: '$(build.sourcesdirectory)/maven'
+
+  - task: Maven@3
+    inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        jdkArchitectureOption: 'x64'
+        goals: 'clean install'
+        mavenVersionOption: 'Path'
+        mavenDirectory: '$(build.sourcesdirectory)/maven/apache-maven-3.5.3'
+        mavenSetM2Home: true
+
+- job: Windows
+  pool:
+      vmImage: 'VS2017-Win2016'
+
+  steps:
+  - script: "powershell -Command \"(new-object System.Net.WebClient).DownloadFile('https://archive.apache.org/dist/maven/maven-3/3.5.3/binaries/apache-maven-3.5.3-bin.zip','$(build.sourcesdirectory)\\apache-maven-3.5.3-bin.zip')\""
+
+  - task: ExtractFiles@1
+    inputs:
+        archiveFilePatterns: 'apache-maven-3.5.3-bin.zip'
+        destinationFolder: '$(build.sourcesdirectory)\maven'
+
+  - task: Maven@3
+    inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        jdkArchitectureOption: 'x64'
+        goals: 'clean install'
+        mavenVersionOption: 'Path'
+        mavenDirectory: '$(build.sourcesdirectory)\maven\apache-maven-3.5.3'
+        mavenSetM2Home: true
+
