@@ -66,6 +66,7 @@ public class HttpCarbonMessage {
     private HttpPipeliningFuture pipeliningFuture;
     private boolean keepAlive;
     private boolean pipeliningNeeded;
+    private boolean passthrough = false;
 
     public HttpCarbonMessage(HttpMessage httpMessage, Listener contentListener) {
         this.httpMessage = httpMessage;
@@ -444,5 +445,29 @@ public class HttpCarbonMessage {
 
     public void setPipeliningFuture(HttpPipeliningFuture pipeliningFuture) {
         this.pipeliningFuture = pipeliningFuture;
+    }
+
+    /**
+     * @return true if it is a passthrough(when message body is not built).
+     */
+    public boolean isPassthrough() {
+        return passthrough;
+    }
+
+    /**
+     * This value is to be set when the message is to be sent to the consumer without building/processing the message
+     * in the application layer.
+     *
+     * @param passthrough if the message is a passthrough.
+     */
+    public void setPassthrough(boolean passthrough) {
+        this.passthrough = passthrough;
+    }
+
+    /**
+     * Removes the content listener that is set for handling Inbound throttling.
+     */
+    public void removeContentListener() {
+        contentObservable.removeListener();
     }
 }

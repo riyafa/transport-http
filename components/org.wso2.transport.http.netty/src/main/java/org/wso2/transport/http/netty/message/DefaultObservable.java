@@ -34,7 +34,8 @@ public class DefaultObservable implements Observable {
 
     @Override
     public void removeListener() {
-        this.listener = null;
+        listener.resumeReadInterest();
+        listener = null;
     }
 
     @Override
